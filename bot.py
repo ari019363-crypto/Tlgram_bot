@@ -13,8 +13,8 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, CallbackQueryHandler
 
 # ==================== تنظیمات ====================
-TOKEN = "YOUR_BOT_TOKEN_HERE"
-ADMIN_IDS = [123456789]
+TOKEN = "8912825405:AAG7X8SzmgoZmscmz0WzIQzSGyaqf0XR8A8"
+ADMIN_IDS = [7430881772]
 DATABASE_PATH = "bot_data.db"
 
 # ==================== متون ====================
