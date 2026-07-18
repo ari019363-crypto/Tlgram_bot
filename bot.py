@@ -1,6 +1,5 @@
 """
 ربات کامل گروه تلگرام با شخصیت دوگانه
-نوشته شده با python-telegram-bot
 """
 
 import logging
@@ -10,121 +9,13 @@ from datetime import datetime, timedelta
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, CallbackQueryHandler
 
+# ==================== ایمپورت متون ====================
+from texts import *
+
 # ==================== تنظیمات ====================
 TOKEN = "8912825405:AAG7X8SzmgoZmscmz0WzIQzSGyaqf0XR8A8"  # توکن ربات رو اینجا بذار
 ADMIN_IDS = [7430881772]  # آیدی عددی ادمین‌ها رو اینجا بذار
 DATABASE_PATH = "bot_data.db"
-
-# ==================== متون ====================
-WELCOME_MESSAGES = [
-    "😊 به جمع ما خوش اومدی {name}! امیدوارم از اینجا لذت ببری... فعلاً!",
-    "🎉 {name} وارد شد! الان دیگه گروه پر از انرژی مثبته (یا منفی؟!)",
-    "🙃 اوهوم! {name} اومد! بذار ببینم چقدر دووم میاری اینجا!",
-    "🌟 {name} جان! گروه ما یه نفر خاص کم داشت... حالا اومدی!",
-    "🔥 {name}! مواظب باش من یه ربات با شخصیت دوگانه‌ام! 😈😇",
-]
-
-GOODBYE_MESSAGES = [
-    "😢 {name} رفت... خب، به هر حال! زندگی ادامه داره!",
-    "👋 {name}، امیدوارم پشیمون نباشی از رفتنت!",
-    "😏 {name} رفت! بالاخره گروه یه نفره کم شد!",
-]
-
-BOT_JOIN_MESSAGES = [
-    "🎉 سلام به همه! من ربات جدید گروه هستم!\nبرای دیدن دستورات /help رو بزنید.\n\n😈 یه نکته: من یه شخصیت دوگانه دارم!",
-    "🤖 سلام! ربات جدید اومده به گروه!\n📚 دستورات: /help\n🎮 بازی: /game",
-]
-
-CLASSIC_ROASTS = [
-    "{name}، میدونستی مغزت مثل اینترنت میمونه؟ همش قطع و وصله! 🤯",
-    "{name}، اگه تنبلی یه المپیک داشت، تو طلا میگرفتی! 🥇",
-    "{name}، سطح IQ گروه با اومدنت پایین اومد! 📉😂",
-    "{name}، تو رو به خدا سکوت کن! داری به اعتبار گروه آسیب میزنی! 🤐",
-]
-
-PRO_ROASTS = [
-    "{name}، اگه قرار باشه کسی رو تحسین کنم، آخرین نفر تو هستی! 🔥",
-    "{name}، میدونی چرا هوا سرده؟ چون تو هستی! 🥶",
-    "{name}، خدا بهت颜值 داد ولی یادش رفت مغز بده! 🤡",
-]
-
-FRIENDLY_ROASTS = [
-    "{name} جان، شوخی میکنم ها! تو واقعاً عزیزی! ❤️",
-    "{name}، این تیکه فقط برای خنده بود! 😊",
-]
-
-HELP_TEXT = """
-📚 **راهنمای ربات گروه**
-
-**دستورات عمومی:**
-/mood - روحیه فعلی ربات
-/mytitle - لقب من
-/titles - لیست لقب‌ها
-/stats - آمار من
-/special - لقب ویژه (یک بار در روز)
-/roast [نام] - تیکه پرانی
-/game - بازی‌ها
-/top - کاربران برتر
-
-**دستورات ادمین:**
-/warn @username - اخطار
-/mute @username [دقیقه] - میوت
-/unmute @username - رفع میوت
-/set_mood happy|roast|evil|neutral - تغییر روحیه
-
-**لقب‌ها:**
-• ۰ پیام: تازه وارد
-• ۵ پیام: تازه نفس
-• ۲۰ پیام: فعال گروه
-• ۵۰ پیام: قدیمی‌تر از خودم!
-• ۱۰۰ پیام: افسانه گروه
-• ۵۰۰ پیام: هم‌رتبه من!
-
-**روحیه‌ها:**
-😊 Happy - مهربون
-😂 Roast - تیکه‌پراکن
-😈 Evil - بدجنس
-🤖 Neutral - بی‌طرف
-"""
-
-GAME_MENU = """
-🎮 **بازی‌ها:**
-/number - حدس عدد
-/riddle - معما
-/fact - حقیقت جالب
-/joke - جوک
-"""
-
-RIDDLES = [
-    {"question": "چیزی که هر چی بیشتر ازش برداری، بیشتر میشه؟", "answer": "گودال"},
-    {"question": "کیست که بدون دست و پا، از کوه بالا میره؟", "answer": "ابر"},
-    {"question": "چه چیزی همیشه میاد ولی هیچوقت نمیرسه؟", "answer": "فردا"},
-]
-
-FACTS = [
-    "🐙 اختاپوس‌ها ۳ تا قلب دارن!",
-    "🦒 زرافه‌ها ۷ مهره گردن دارن!",
-    "🐧 پنگوئن‌ها می‌تونن تا ۱۵ دقیقه زیر آب بمونن!",
-]
-
-JOKES = [
-    "یه روز یه تخته سیاه به تخته سفید گفت: چرا همیشه سیاهی؟ تخته سفید گفت: تو که جای منو گرفتی! 😂",
-    "یه برنامه‌نویس به برنامه‌نویس دیگه گفت: زندگی‌ام پر از خطاست! گفت: دیباگ کن! 😅",
-    "چرا کامپیوترها عاشق برفن؟ چون وقتی برف میاد، همه چیز white میشه! ❄️",
-]
-
-KEYWORD_RESPONSES = {
-    "سلام": ["😊 سلام {name} جان! چه خبر؟", "👋 سلام! حالت چطوره؟"],
-    "خداحافظ": ["👋 {name}، زود برگرد!", "😢 {name} رفت... خب!"],
-    "ممنون": ["❤️ خواهش میکنم {name} جان!", "🌟 خوشحالم که راضی هستی!"],
-}
-
-MOOD_RESPONSES = {
-    "happy": ["😊 امروز روز خوبیه {name}!", "🌟 {name} جان! انرژی مثبت!"],
-    "roast": ["😂 {name}! آخه چرا اینقدر بامزه‌ای؟", "🔥 {name}، استعداد خرابکاری داری!"],
-    "evil": ["😈 {name}... امروز حالم خوب نیست!", "💀 {name}، اگه پیام بفرسی جواب نمیدم!"],
-    "neutral": ["🤖 {name}، پیامت رو خوندم!", "👍 {name}، اوکی!"],
-}
 
 # ==================== دیتابیس ====================
 class Database:
@@ -265,7 +156,7 @@ class MoodManager:
         self.moods = ["happy", "roast", "evil", "neutral"]
     
     def get_mood(self):
-        if (datetime.now() - self.last_change).seconds > 1800:  # 30 دقیقه
+        if (datetime.now() - self.last_change).seconds > 1800:
             self.current_mood = random.choice(self.moods)
             self.last_change = datetime.now()
         return self.current_mood
@@ -309,6 +200,10 @@ db = Database()
 mood = MoodManager()
 title_mgr = TitleManager()
 game_sessions = {}
+
+# ==================== توابع کمکی ====================
+def is_admin(user_id):
+    return user_id in ADMIN_IDS
 
 # ==================== دستورات ====================
 
@@ -471,8 +366,7 @@ async def warn(update: Update, context: CallbackContext):
         return
     
     username = context.args[0].replace('@', '')
-    # اینجا باید کاربر رو پیدا کنی - ساده شده
-    db.add_warning(123, update.effective_chat.id)  # نمونه
+    db.add_warning(123, update.effective_chat.id)
     await update.message.reply_text(f"⚠️ به {username} اخطار داده شد!")
 
 async def mute(update: Update, context: CallbackContext):
@@ -487,7 +381,7 @@ async def mute(update: Update, context: CallbackContext):
     username = context.args[0].replace('@', '')
     minutes = int(context.args[1]) if len(context.args) > 1 else 60
     
-    db.mute_user(123, update.effective_chat.id, minutes)  # نمونه
+    db.mute_user(123, update.effective_chat.id, minutes)
     await update.message.reply_text(f"🔇 {username} به مدت {minutes} دقیقه میوت شد!")
 
 async def unmute(update: Update, context: CallbackContext):
@@ -500,7 +394,7 @@ async def unmute(update: Update, context: CallbackContext):
         return
     
     username = context.args[0].replace('@', '')
-    db.unmute_user(123, update.effective_chat.id)  # نمونه
+    db.unmute_user(123, update.effective_chat.id)
     await update.message.reply_text(f"🔊 میوت {username} برداشته شد!")
 
 async def set_mood(update: Update, context: CallbackContext):
@@ -534,6 +428,8 @@ async def group_leave(update: Update, context: CallbackContext):
 
 # ==================== مدیریت پیام‌ها ====================
 
+user_states = {}
+
 async def handle_message(update: Update, context: CallbackContext):
     user = update.effective_user
     text = update.message.text
@@ -542,11 +438,9 @@ async def handle_message(update: Update, context: CallbackContext):
     if not text or not user:
         return
     
-    # ثبت کاربر
     db.add_user(user.id, user.username or "unknown", user.first_name, chat_id)
     db_user = db.get_user(user.id, chat_id)
     
-    # بررسی میوت
     if db_user and db_user['is_muted']:
         if db_user['mute_until'] and datetime.now() < datetime.fromisoformat(db_user['mute_until']):
             await update.message.delete()
@@ -555,7 +449,6 @@ async def handle_message(update: Update, context: CallbackContext):
         else:
             db.unmute_user(user.id, chat_id)
     
-    # بازی‌ها
     if user.id in game_sessions:
         game = game_sessions[user.id]
         
@@ -581,18 +474,15 @@ async def handle_message(update: Update, context: CallbackContext):
                 await update.message.reply_text("❌ نه! دوباره امتحان کن!")
             return
     
-    # پاسخ به کلمات کلیدی
     for keyword, responses in KEYWORD_RESPONSES.items():
         if keyword in text:
             await update.message.reply_text(random.choice(responses).format(name=user.first_name))
             break
     
-    # پاسخ بر اساس روحیه
-    if random.random() < 0.1:  # ۱۰٪ شانس
+    if random.random() < 0.1:
         m = mood.get_mood()
         await update.message.reply_text(random.choice(MOOD_RESPONSES.get(m, MOOD_RESPONSES["neutral"])).format(name=user.first_name))
     
-    # به‌روزرسانی لقب
     db_user = db.get_user(user.id, chat_id)
     if db_user:
         new_title = title_mgr.get_title(db_user['message_count'])
@@ -606,11 +496,6 @@ async def handle_message(update: Update, context: CallbackContext):
             if db_user['message_count'] % 5 == 0:
                 await update.message.reply_text(f"🎉 لقب شما به **{new_title}** تغییر کرد!", parse_mode='Markdown')
 
-# ==================== توابع کمکی ====================
-
-def is_admin(user_id):
-    return user_id in ADMIN_IDS
-
 # ==================== اجرا ====================
 
 def main():
@@ -620,7 +505,6 @@ def main():
     
     app = Application.builder().token(TOKEN).build()
     
-    # دستورات
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("mood", mood_command))
@@ -636,20 +520,16 @@ def main():
     app.add_handler(CommandHandler("riddle", riddle))
     app.add_handler(CommandHandler("number", number_game))
     
-    # دستورات ادمین
     app.add_handler(CommandHandler("warn", warn))
     app.add_handler(CommandHandler("mute", mute))
     app.add_handler(CommandHandler("unmute", unmute))
     app.add_handler(CommandHandler("set_mood", set_mood))
     
-    # کالبک
     app.add_handler(CallbackQueryHandler(game_callback, pattern="^game_"))
     
-    # رویدادها
     app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, group_join))
     app.add_handler(MessageHandler(filters.StatusUpdate.LEFT_CHAT_MEMBER, group_leave))
     
-    # پیام‌ها
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 ربات روشن شد!")
