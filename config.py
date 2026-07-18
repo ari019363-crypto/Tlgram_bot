@@ -4,22 +4,22 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    TOKEN = os.getenv('8912825405:AAG7X8SzmgoZmscmz0WzIQzSGyaqf0XR8A8')
-    ADMIN_IDS = [7430881772]  # فقط آیدی ادمین‌ها رو بذار
+    # توکن ربات - از env یا مستقیم
+    TOKEN = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')
     
-    # آیدی گروه رو دیگه اینجا نمیذاریم! خودکار تشخیص میده
+    # آیدی ادمین‌ها - از env یا مستقیم
+    ADMIN_IDS = [int(id.strip()) for id in os.getenv('ADMIN_IDS', '123456789').split(',')]
     
-    # پیام‌های خوش‌آمدگویی
-    WELCOME_MESSAGES = [
-        "😊 به جمع ما خوش اومدی {}! امیدوارم از اینجا لذت ببری... فعلاً!",
-        "🎉 {} وارد شد! الان دیگه گروه ما پر از انرژی مثبته (یا منفی؟!)",
-        "🙃 اوهوم! {} اومد! بذار ببینم چقدر دووم میاری اینجا!"
-    ]
+    # تنظیمات دیتابیس
+    DATABASE_PATH = os.getenv('DATABASE_PATH', 'bot_data.db')
     
-    # پاسخ‌های خشک
-    ROAST_MESSAGES = [
-        "{} جان، تو که حتی نمیتونی پیام درست بفرستی!",
-        "{} عزیزم، مامانت میدونه اینجا چیکار میکنی؟",
-        "{}، سطح IQ گروه با اومدنت پایین اومد! 😂",
-        "{}، تو رو به خدا سکوت کن! داری به اعتبار گروه آسیب میزنی!"
-    ]
+    # تنظیمات روحیه (دقیقه)
+    MOOD_CHANGE_INTERVAL = int(os.getenv('MOOD_CHANGE_INTERVAL', '30'))
+    DEFAULT_MOOD = os.getenv('DEFAULT_MOOD', 'happy')
+    
+    # تنظیمات میوت
+    DEFAULT_MUTE_MINUTES = int(os.getenv('DEFAULT_MUTE_MINUTES', '60'))
+    MAX_WARNS = int(os.getenv('MAX_WARNS', '3'))
+    
+    # لاگ
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
